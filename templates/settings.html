@@ -45,6 +45,12 @@
 					</select>
 				</div>
 				<div class="prefs-group">
+					<label for="post_count">Posts per page:</label>
+					<select name="post_count" id="post_count">
+						{% call utils::options(prefs.post_count, ["25", "50", "100"], "50") %}
+					</select>
+				</div>
+				<div class="prefs-group">
 					<label for="wide">Wide UI:</label>
 					<input type="hidden" value="off" name="wide">
 					<input type="checkbox" name="wide" id="wide" {% if prefs.wide=="on" %}checked{% endif %}>
@@ -70,6 +76,12 @@
 					<select name="comment_sort" id="comment_sort">
 						{% call utils::options(prefs.comment_sort, ["confidence", "top", "new", "controversial", "old"],
 						"confidence") %}
+					</select>
+				</div>
+				<div class="prefs-group">
+					<label for="collapse_depth">Collapse comments at depth:</label>
+					<select name="collapse_depth" id="collapse_depth">
+						{% call utils::options(prefs.collapse_depth, ["2", "3", "5", "10", "off"], "2") %}
 					</select>
 				</div>
 				<div class="prefs-group">
