@@ -2029,6 +2029,16 @@ th {
         width: calc(100vw - 20px);
         margin-bottom: 10px;
     }
+
+    /* Hide body preview on mobile for all layouts */
+    .post_body.post_preview {
+        display: none;
+    }
+
+    /* Ensure touch-friendly collapse bars */
+    .comment_left {
+        min-height: 44px;
+    }
 }
 
 @media screen and (max-width: 580px) {
@@ -2044,28 +2054,12 @@ th {
     }
 
     .post {
-        grid-template:
-            "post_header post_header post_thumbnail" auto
-            "post_title  post_title  post_thumbnail" 1fr
-            "post_media  post_media  post_thumbnail" auto
-            "post_body   post_body   post_thumbnail" auto
-            "post_poll   post_poll   post_thumbnail" auto
-            "post_notification post_notification post_thumbnail" auto
-            "post_score  post_footer post_thumbnail" auto
-            / auto 1fr fit-content(min(20%, 152px));
+        gap: 8px;
+        padding: 8px;
     }
 
-    .post_score {
-        margin: 5px 0px 20px 15px;
-        padding: 0;
-    }
-
-    .post_poll {
-        padding: 5px 15px 10px 12px;
-    }
-
-    .compact .post_score {
-        padding: 0;
+    .collapse_pill {
+        width: 100%;
     }
 
     .post_score::before {
