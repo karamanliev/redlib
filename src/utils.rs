@@ -489,6 +489,9 @@ pub struct Comment {
 	pub is_filtered: bool,
 	pub more_count: i64,
 	pub prefs: Preferences,
+	pub depth: u32,
+	pub descendant_count: u32,
+	pub auto_collapsed: bool,
 }
 
 #[derive(Default, Clone, Serialize)]
