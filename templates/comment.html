@@ -12,9 +12,9 @@
          &#x2022;
          {% endif %}
     </p>
-        <div class="line"></div>
+        <div class="line depth_{{ depth.min(2) }}"></div>
 	</div>
-	<details class="comment_right" {% if !collapsed || highlighted %}open{% endif %}>
+	<details class="comment_right" {% if (!collapsed && !auto_collapsed) || highlighted %}open{% endif %}>
 		<summary class="comment_data">
 			{% if author.name != "[deleted]" %}
 				<a class="comment_author {{ author.distinguished }} {% if author.name == post_author %}op{% endif %}" href="/user/{{ author.name }}">u/{{ author.name }}</a>
@@ -33,6 +33,9 @@
 				<img alt="{{ award.name }}" src="{{ award.icon_url }}" width="16" height="16"/>
 			</span>
 			{% endfor %}
+			{% endif %}
+			{% if auto_collapsed && descendant_count > 0 %}
+			<span class="collapse_pill">▸ {{ descendant_count }} more replies</span>
 			{% endif %}
 		</summary>
 		{% if is_filtered %}
