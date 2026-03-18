@@ -969,28 +969,96 @@ a.search_subreddit:hover {
 }
 
 .post {
-    border-radius: 5px;
+    display: flex;
+    gap: var(--post-gap, 12px);
+    padding: var(--post-padding, 12px);
+    align-items: flex-start;
+    cursor: pointer;
     background: var(--post);
-    box-shadow: var(--shadow);
-    display: grid;
-    transition: 0.2s background;
-    grid-template:
-        "post_score post_header post_thumbnail" auto
-        "post_score post_title  post_thumbnail" 1fr
-        "post_score post_media  post_thumbnail" auto
-        "post_score post_body   post_thumbnail" auto
-        "post_score post_poll   post_thumbnail" auto
-        "post_score post_notification post_thumbnail" auto
-        "post_score post_footer post_thumbnail" auto
-        / minmax(40px, auto) minmax(0, 1fr) fit-content(min(20%, 152px));
-}
-
-.post:not(:last-child) {
-    margin-bottom: 10px;
+    border: var(--panel-border);
+    border-radius: 5px;
+    margin-bottom: 8px;
 }
 
 .post:hover {
-    background: var(--foreground);
+    background: var(--highlighted);
+}
+
+.post_content {
+    flex: 1;
+    min-width: 0;
+}
+
+.post_thumbnail {
+    flex-shrink: 0;
+    width: var(--thumb-width, 120px);
+    height: var(--thumb-height, 90px);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.post_thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Card (Spacious) - default */
+body, body.card {
+    --thumb-width: 120px;
+    --thumb-height: 90px;
+    --post-padding: 12px;
+    --post-gap: 12px;
+}
+
+/* Clean (Normal) */
+body.clean {
+    --thumb-width: 100px;
+    --thumb-height: 75px;
+    --post-padding: 10px 0;
+    --post-gap: 10px;
+}
+
+body.clean .post {
+    background: none;
+    border: none;
+    border-radius: 0;
+    border-bottom: var(--panel-border);
+    margin-bottom: 0;
+}
+
+/* Compact (Dense) */
+body.compact {
+    --thumb-width: 60px;
+    --thumb-height: 45px;
+    --post-padding: 6px 8px;
+    --post-gap: 8px;
+}
+
+body.compact .post {
+    background: none;
+    border: none;
+    border-radius: 0;
+    border-bottom: var(--panel-border);
+    margin-bottom: 0;
+    align-items: center;
+}
+
+body.compact .post_title {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+body.compact .post_body.post_preview {
+    display: none;
+}
+
+body.compact .post_thumbnail {
+    order: -1;
+    border-radius: 3px;
 }
 
 .post_score {
@@ -999,7 +1067,6 @@ a.search_subreddit:hover {
     font-size: 13px;
     font-weight: bold;
     color: var(--accent);
-    grid-area: post_score;
     text-align: center;
     border-radius: 5px 0 0 5px;
     transition: 0.2s background;
@@ -1011,7 +1078,6 @@ a.search_subreddit:hover {
 
 .post_header {
     margin: 15px 20px 5px 12px;
-    grid-area: post_header;
     line-height: 25px;
 }
 
@@ -1025,7 +1091,6 @@ a.search_subreddit:hover {
     line-height: 1.5;
     overflow-wrap: anywhere;
     margin: 5px 15px 5px 12px;
-    grid-area: post_title;
 }
 
 .post:not(.highlighted) .post_title a:visited {
@@ -1033,7 +1098,6 @@ a.search_subreddit:hover {
 }
 
 .post_notification {
-    grid-area: post_notification;
     margin: 5px 15px;
     text-align: center;
     font-size: 12px;
@@ -1113,7 +1177,6 @@ a.search_subreddit:hover {
 .post .__NoScript_PlaceHolder__,
 .gallery {
     max-width: calc(100% - 40px);
-    grid-area: post_media;
     margin: 15px auto 5px auto;
     width: auto;
     height: auto;
@@ -1149,7 +1212,8 @@ a.search_subreddit:hover {
     filter: blur(0.25rem);
 }
 
-.post_blurred .post_thumbnail * {
+.post_blurred .post_thumbnail *,
+.post_blurred .post_thumbnail img {
     filter: blur(0.3rem);
 }
 
@@ -1157,7 +1221,8 @@ a.search_subreddit:hover {
 .post_blurred .post_media_content:hover ~ .post_body,
 .post_blurred .post_media_content:has(~ .post_body:hover) *,
 .post_blurred .post_body:hover,
-.post_blurred .post_thumbnail:hover * {
+.post_blurred .post_thumbnail:hover *,
+.post_blurred .post_thumbnail:hover img {
 	filter: none;
 }
 
@@ -1194,7 +1259,6 @@ a.search_subreddit:hover {
 #post_url {
     color: var(--accent);
     margin: 5px 12px;
-    grid-area: post_media;
     overflow-wrap: anywhere;
 }
 
@@ -1202,7 +1266,6 @@ a.search_subreddit:hover {
     opacity: 0.9;
     font-weight: normal;
     padding: 5px 15px 5px 12px;
-    grid-area: post_body;
     width: calc(100% - 30px);
     overflow-wrap: anywhere;
 }
@@ -1222,7 +1285,6 @@ a.search_subreddit:hover {
 }
 
 .post_poll {
-    grid-area: post_poll;
     padding: 5px 15px 5px 12px;
 }
 
@@ -1277,7 +1339,6 @@ a.search_subreddit:hover {
     justify-content: space-between;
     opacity: 0.5;
     font-size: 14px;
-    grid-area: post_footer;
     margin: 5px 20px 15px 12px;
 }
 
@@ -1319,13 +1380,8 @@ a.search_subreddit:hover {
 }
 
 .post_thumbnail {
-    border-radius: 5px;
-    border: var(--panel-border);
     display: grid;
-    overflow: hidden;
     background-color: var(--background);
-    grid-area: post_thumbnail;
-    margin: 5px;
 }
 
 .post_thumbnail div {
@@ -1574,67 +1630,6 @@ summary.comment_data {
 }
 
 /* Layouts */
-
-.compact .post:not(.highlighted) {
-    border-radius: 0;
-    margin: 0;
-    padding: 0;
-}
-
-.compact .post:first-of-type {
-    border-radius: 5px 5px 0 0;
-    overflow: hidden;
-}
-
-.compact .post:last-of-type {
-    border-radius: 0 0 5px 5px;
-    overflow: hidden;
-}
-
-.compact .post.highlighted {
-    border-radius: 5px;
-}
-.compact .post:not(:last-of-type):not(.highlighted):not(.stickied) {
-    border-bottom: 0;
-}
-
-.compact .post_score {
-    padding-top: 15px;
-    border-radius: 0;
-}
-
-.compact .post_header {
-    margin: 11px 15px 2.5px 12px;
-    font-size: 14px;
-}
-
-.compact .post_title,
-.compact #post_url,
-.compact .post_body {
-    margin: 2.5px 15px;
-}
-
-.compact .post_preview {
-    display: none;
-}
-
-.compact .post_media {
-    max-width: calc(100% - 30px);
-    margin: 2.5px auto;
-}
-
-.compact .post_footer {
-    margin: 5px 15px 15px 15px;
-}
-
-.compact .post_thumbnail {
-    width: 75px;
-    height: 75px;
-}
-
-.compact footer {
-    margin-top: 20px;
-}
 
 /* Settings */
 
