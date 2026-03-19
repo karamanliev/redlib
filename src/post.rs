@@ -233,8 +233,10 @@ fn build_comment(
 
 	let descendant_count: u32 = replies.iter().map(|r| 1 + r.descendant_count).sum();
 	let prefs = Preferences::new(req);
-	let collapse_depth: u32 = if prefs.collapse_depth == "off" || prefs.collapse_depth.is_empty() {
+	let collapse_depth: u32 = if prefs.collapse_depth == "off" {
 		u32::MAX
+	} else if prefs.collapse_depth.is_empty() {
+		2 // Default: collapse at depth 2
 	} else {
 		prefs.collapse_depth.parse().unwrap_or(2)
 	};
