@@ -1,5 +1,5 @@
 # Build stage
-FROM rust:1.83-alpine AS builder
+FROM rust:1.86-alpine AS builder
 
 ARG TARGET
 
@@ -11,7 +11,10 @@ RUN apk add --no-cache \
     pkgconfig \
     git \
     perl \
-    make
+    make \
+    cmake \
+    clang-dev \
+    linux-headers
 
 # Set working directory
 WORKDIR /app
