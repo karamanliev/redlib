@@ -80,6 +80,22 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-04-09T21:47:10.326Z"
+    },
+    {
+      "id": "bug-006",
+      "timestamp": "2026-04-10T15:03:21.633Z",
+      "error_message": "Wrong reference: fca4d64 should be 532a452",
+      "file": "../talos-argocd-proxmox/my-apps/media/redlib/deployment.yaml",
+      "root_cause": "Used \"fca4d64\" instead of \"532a452\"",
+      "fix": "Changed fca4d64 → 532a452",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "yaml"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-04-10T15:03:21.633Z"
     }
   ]
 }
