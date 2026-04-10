@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "bugs": [
+    {
+      "id": "bug-001",
+      "timestamp": "2026-04-09T21:38:34.510Z",
+      "error_message": "Significant refactor of ",
+      "file": "src/utils.rs",
+      "root_cause": "11 lines replaced/restructured",
+      "fix": "Rewrote 96→32 lines (11 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "rs"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-04-09T21:38:34.510Z"
+    },
+    {
+      "id": "bug-002",
+      "timestamp": "2026-04-09T21:46:19.219Z",
+      "error_message": "CSS fix: margin-top, margin-bottom",
+      "file": "static/style.css",
+      "root_cause": "margin-top: 10px → 0; margin-bottom: 0px → 1.25rem",
+      "fix": "Changed margin-top: 10px → 0; margin-bottom: 0px → 1.25rem",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "css"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-04-09T21:46:27.383Z"
+    },
+    {
+      "id": "bug-003",
+      "timestamp": "2026-04-09T21:46:29.889Z",
+      "error_message": "Wrong reference: controls should be playsinline",
+      "file": "templates/utils.html",
+      "root_cause": "Used \"controls\" instead of \"playsinline\"",
+      "fix": "Changed controls → playsinline",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "html"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-04-09T21:46:29.889Z"
+    },
+    {
+      "id": "bug-004",
+      "timestamp": "2026-04-09T21:46:35.251Z",
+      "error_message": "Incorrect value in code",
+      "file": "templates/utils.html",
+      "root_cause": "Had \"Gallery image\"",
+      "fix": "Changed to \"async\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "html"
+      ],
+      "related_bugs": [],
+      "occurrences": 4,
+      "last_seen": "2026-04-09T21:47:23.778Z"
+    },
+    {
+      "id": "bug-005",
+      "timestamp": "2026-04-09T21:47:10.326Z",
+      "error_message": "Incorrect value in code",
+      "file": "templates/base.html",
+      "root_cause": "Had \"stylesheet\"",
+      "fix": "Changed to \"preload\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "html"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-04-09T21:47:10.326Z"
+    }
+  ]
+}
