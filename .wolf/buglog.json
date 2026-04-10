@@ -96,6 +96,22 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-04-10T15:03:21.633Z"
+    },
+    {
+      "id": "bug-007",
+      "timestamp": "2026-04-10T21:20:23.674Z",
+      "error_message": "Incorrect value in code",
+      "file": "Cargo.toml",
+      "root_cause": "Had \"1.83\"",
+      "fix": "Changed to \"1.86\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "toml"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-04-10T21:20:23.674Z"
     }
   ]
 }

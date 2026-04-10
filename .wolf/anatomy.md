@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-04-10T21:07:28.293Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-04-10T21:20:23.668Z
 > Files: 119 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../talos-argocd-proxmox/my-apps/media/redlib/
@@ -24,7 +24,7 @@
 - `DOCKER.md` — Redlib Docker Images on GHCR (~524 tok)
 - `Dockerfile` — Docker container definition (~138 tok)
 - `Dockerfile.alpine` — supported versions here: https://hub.docker.com/_/rust (~355 tok)
-- `Dockerfile.build` — Build stage (~271 tok)
+- `Dockerfile.build` — Build stage (~283 tok)
 - `Dockerfile.ubuntu` — supported versions here: https://hub.docker.com/_/rust (~393 tok)
 - `flake.nix` (~470 tok)
 - `heroku.yml` (~11 tok)
