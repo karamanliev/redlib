@@ -214,7 +214,9 @@ async fn main() {
 		"Content-Security-Policy" => "default-src 'none'; font-src 'self'; script-src 'self' blob:; manifest-src 'self'; media-src 'self' data: blob: about:; style-src 'self' 'unsafe-inline'; base-uri 'none'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none'; connect-src 'self'; worker-src blob:;"
 	};
 
-	// Extend CSP with analytics host if configured
+	// Extend CSP and relax Referrer-Policy when analytics is enabled.
+	// PostHog's /decide endpoint requires a Referer header for Django CSRF validation.
+	// strict-origin-when-cross-origin sends only the origin (not the full path) on cross-origin requests.
 	if redlib::analytics::ANALYTICS.enabled && !redlib::analytics::ANALYTICS.client_host.is_empty() {
 		let host = &redlib::analytics::ANALYTICS.client_host;
 		let csp = format!(
@@ -223,6 +225,7 @@ async fn main() {
 		if let Ok(val) = HeaderValue::from_str(&csp) {
 			app.default_headers.insert("Content-Security-Policy", val);
 		}
+		app.default_headers.insert("Referrer-Policy", HeaderValue::from_static("strict-origin-when-cross-origin"));
 	}
 
 	if let Some(expire_time) = hsts {
