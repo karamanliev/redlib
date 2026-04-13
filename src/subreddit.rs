@@ -659,6 +659,7 @@ mod tests {
 	}
 
 	#[tokio::test(flavor = "multi_thread")]
+	#[ignore] // Reddit blocks GitHub Actions IPs
 	async fn test_gated_and_quarantined() {
 		let quarantined = subreddit("edgy", true).await;
 		assert!(quarantined.is_ok());

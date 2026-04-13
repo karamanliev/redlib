@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-04-09T20:55:50.715Z",
   "lifetime": {
-    "total_tokens_estimated": 2300146,
-    "total_reads": 541,
-    "total_writes": 1058,
+    "total_tokens_estimated": 2342589,
+    "total_reads": 554,
+    "total_writes": 1079,
     "total_sessions": 5,
-    "anatomy_hits": 502,
-    "anatomy_misses": 39,
-    "repeated_reads_blocked": 808,
-    "estimated_savings_vs_bare_cli": 7473594
+    "anatomy_hits": 512,
+    "anatomy_misses": 42,
+    "repeated_reads_blocked": 820,
+    "estimated_savings_vs_bare_cli": 7622450
   },
   "sessions": [
     {
@@ -9326,6 +9326,206 @@
         "writes_count": 9,
         "repeated_reads_blocked": 2,
         "anatomy_lookups": 6
+      }
+    },
+    {
+      "id": "session-2026-04-13-2335",
+      "started": "2026-04-13T03:35:36.275Z",
+      "ended": "2026-04-13T03:57:49.571Z",
+      "reads": [
+        {
+          "file": "/home/vanillax/programming/redlib/.github/workflows/ghcr.yml",
+          "tokens_estimated": 1238,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/.github/workflows/main-rust.yml",
+          "tokens_estimated": 677,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/Dockerfile.build",
+          "tokens_estimated": 283,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/.github/workflows/pull-request.yml",
+          "tokens_estimated": 488,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/client.rs",
+          "tokens_estimated": 5227,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/oauth.rs",
+          "tokens_estimated": 4675,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/.github/workflows/build-artifacts.yaml",
+          "tokens_estimated": 670,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/utils.rs",
+          "tokens_estimated": 17566,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/tmp/config_1.txt",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/tmp/config_2.txt",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/tmp/config_3.txt",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/subreddit.rs",
+          "tokens_estimated": 6383,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/post.rs",
+          "tokens_estimated": 2680,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/home/vanillax/programming/redlib/src/client.rs",
+          "tokens_estimated": 36,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/client.rs",
+          "tokens_estimated": 45,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/client.rs",
+          "tokens_estimated": 37,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/client.rs",
+          "tokens_estimated": 37,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/client.rs",
+          "tokens_estimated": 34,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/client.rs",
+          "tokens_estimated": 34,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/client.rs",
+          "tokens_estimated": 34,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/.github/workflows/pull-request.yml",
+          "tokens_estimated": 162,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/.github/workflows/pull-request.yml",
+          "tokens_estimated": 161,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/utils.rs",
+          "tokens_estimated": 60,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/utils.rs",
+          "tokens_estimated": 552,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/utils.rs",
+          "tokens_estimated": 64,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/utils.rs",
+          "tokens_estimated": 1,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/utils.rs",
+          "tokens_estimated": 595,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/.github/workflows/main-rust.yml",
+          "tokens_estimated": 170,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/.github/workflows/build-artifacts.yaml",
+          "tokens_estimated": 287,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/utils.rs",
+          "tokens_estimated": 115,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/utils.rs",
+          "tokens_estimated": 34,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/oauth.rs",
+          "tokens_estimated": 37,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/subreddit.rs",
+          "tokens_estimated": 37,
+          "action": "edit"
+        },
+        {
+          "file": "/home/vanillax/programming/redlib/src/post.rs",
+          "tokens_estimated": 24,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 39887,
+        "output_tokens_estimated": 2556,
+        "reads_count": 13,
+        "writes_count": 21,
+        "repeated_reads_blocked": 12,
+        "anatomy_lookups": 10
       }
     }
   ],

@@ -1580,6 +1580,7 @@ mod tests {
 	}
 
 	#[tokio::test(flavor = "multi_thread")]
+	#[ignore] // Reddit blocks GitHub Actions IPs
 	async fn test_fetching_subreddit_quarantined() {
 		let subreddit = Post::fetch("/r/drugs", true).await;
 		assert!(subreddit.is_ok());
@@ -1587,6 +1588,7 @@ mod tests {
 	}
 
 	#[tokio::test(flavor = "multi_thread")]
+	#[ignore] // Reddit blocks GitHub Actions IPs
 	async fn test_fetching_nsfw_subreddit() {
 		// Gonwild is a place for closed, Euclidean Geometric shapes to exchange their nth terms for karma; showing off their edges in a comfortable environment without pressure.
 		// Find a good sub that is tagged NSFW but that actually isn't in case my future employers are watching (they probably are)
@@ -1597,6 +1599,7 @@ mod tests {
 	}
 
 	#[tokio::test(flavor = "multi_thread")]
+	#[ignore] // Reddit blocks GitHub Actions IPs
 	async fn test_fetching_ws() {
 		let subreddit = Post::fetch("/r/popular", false).await;
 		assert!(subreddit.is_ok());
@@ -1677,7 +1680,11 @@ How`s your monitor by the way? Any IPS bleed whatsoever? I either got lucky or t
 		test_round_trip(&prefs, true);
 	}
 
-	static KNOWN_GOOD_CONFIGS: &[&str] = &["ยßΏØØΑनయ࿁ΤÀ", "ඤʒഖºÁǗμງɐჭఝଏඎძɍÌયফϚಛȣґഇʇƥɍऒპӳĪଇ၀ԁÀ", "ਪҥΤºÁÔΠΝปţӍț௷࿇ຢĩŇଣяǛϛయਤఽЋƊєॹōජΓͿĞइසςǊȭ"];
+	static KNOWN_GOOD_CONFIGS: &[&str] = &[
+		"ยßΏØØΑनయ࿁ΤÀ",
+		"षӫഗÀÃÎΞཔդஈ༖၍ðĞȔଭఋģდॿਠөƹఽϺÐѴྉညকଥεČՅϻգңஃθੜʣწೡ૨ҵũЇѼΥൾൿȣ໙ఉɮѱၑϝਕ३કұÐ",
+		"ধҫഗॠÃǓယɴಝūམƕఙƵŹ႟гঝɃҭчԷබӡĊɖњǛ٣ưƆਸചŐॸਣদΉĚඦཨБʎѲ೮ΪƀƓॽୱŽƜႱƙஇಭპଙಠӸȶईႁҀƢŦ๓кධಪଘŵƯÝʊவऋӍໜณȳӯӋႬ४ၓΚക",
+	];
 
 	#[test]
 	fn test_known_good_configs_deserialization() {
@@ -1705,6 +1712,63 @@ How`s your monitor by the way? Any IPS bleed whatsoever? I either got lucky or t
 		let decompressed = if compression { deflate_decompress(compressed).unwrap() } else { compressed };
 		let deserialized: Preferences = bincode::deserialize(&decompressed).unwrap();
 		assert_eq!(*input, deserialized);
+	}
+
+	#[test]
+	fn generate_known_good_configs_helper() {
+		let p1 = Preferences::default();
+
+		let p2 = Preferences {
+			theme: "dark".to_string(),
+			front_page: "popular".to_string(),
+			layout: "card".to_string(),
+			wide: "on".to_string(),
+			show_nsfw: "on".to_string(),
+			use_hls: "on".to_string(),
+			comment_sort: "top".to_string(),
+			post_sort: "hot".to_string(),
+			subscriptions: vec!["rust".to_string(), "linux".to_string()],
+			post_count: "50".to_string(),
+			collapse_depth: "3".to_string(),
+			..Default::default()
+		};
+
+		let p3 = Preferences {
+			theme: "catppuccinMocha".to_string(),
+			front_page: "all".to_string(),
+			layout: "compact".to_string(),
+			wide: "on".to_string(),
+			blur_spoiler: "on".to_string(),
+			blur_nsfw: "on".to_string(),
+			hide_hls_notification: "on".to_string(),
+			video_quality: "720".to_string(),
+			hide_sidebar_and_summary: "on".to_string(),
+			use_hls: "on".to_string(),
+			autoplay_videos: "on".to_string(),
+			fixed_navbar: "on".to_string(),
+			disable_visit_reddit_confirmation: "on".to_string(),
+			comment_sort: "new".to_string(),
+			post_sort: "new".to_string(),
+			subscriptions: vec!["rust".to_string(), "linux".to_string(), "privacy".to_string()],
+			filters: vec!["spam_sub".to_string()],
+			hide_awards: "on".to_string(),
+			hide_score: "on".to_string(),
+			remove_default_feeds: "on".to_string(),
+			post_count: "100".to_string(),
+			collapse_depth: "5".to_string(),
+			..Default::default()
+		};
+
+		for (i, prefs) in [p1, p2, p3].iter().enumerate() {
+			let serialized = bincode::serialize(prefs).unwrap();
+			let compressed = deflate_compress(serialized).unwrap();
+			let encoded = base2048::encode(&compressed);
+			let decoded = base2048::decode(&encoded).unwrap();
+			let decompressed = deflate_decompress(decoded).unwrap();
+			let _: Preferences = bincode::deserialize(&decompressed).unwrap();
+			std::fs::write(format!("/tmp/config_{}.txt", i + 1), &encoded).unwrap();
+			eprintln!("Config {} written to /tmp/config_{}.txt ({} chars)", i + 1, i + 1, encoded.len());
+		}
 	}
 }
 

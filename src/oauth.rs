@@ -488,6 +488,7 @@ mod tests {
 	use super::*;
 
 	#[tokio::test(flavor = "multi_thread")]
+	#[ignore] // Reddit blocks GitHub Actions IPs
 	async fn test_mobile_spoof_backend() {
 		// Test MobileSpoofAuth backend specifically
 		let mut backend = MobileSpoofAuth::new();

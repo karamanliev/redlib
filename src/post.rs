@@ -138,6 +138,7 @@ fn parse_comments(
 		.collect()
 }
 
+#[allow(clippy::too_many_arguments)]
 fn query_comments(
 	json: &serde_json::Value,
 	post_link: &str,

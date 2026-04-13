@@ -120,10 +120,49 @@
       "file": "src/client.rs",
       "root_cause": "All client tests make live HTTP requests to Reddit, which blocks GitHub Actions IPs. Also pull-request.yml was missing cmake/clang build deps for BoringSSL compilation.",
       "fix": "Added #[ignore] to all 7 network-dependent tests in client.rs. Added cmake/perl/pkg-config/libclang-dev to test and clippy jobs in pull-request.yml.",
-      "tags": ["ci", "github-actions", "tests", "network", "boringssl", "reddit-blocking"],
+      "tags": [
+        "ci",
+        "github-actions",
+        "tests",
+        "network",
+        "boringssl",
+        "reddit-blocking"
+      ],
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-04-12T00:00:00.000Z"
+    },
+    {
+      "id": "bug-009",
+      "timestamp": "2026-04-13T03:55:45.204Z",
+      "error_message": "Significant refactor of ",
+      "file": ".github/workflows/main-rust.yml",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 9→12 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "yml"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-04-13T03:55:45.204Z"
+    },
+    {
+      "id": "bug-010",
+      "timestamp": "2026-04-13T03:55:53.848Z",
+      "error_message": "Significant refactor of ",
+      "file": ".github/workflows/build-artifacts.yaml",
+      "root_cause": "5 lines replaced/restructured",
+      "fix": "Rewrote 14→18 lines (5 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "yaml"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-04-13T03:55:53.848Z"
     }
   ]
 }
