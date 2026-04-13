@@ -112,6 +112,18 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-04-10T21:20:23.674Z"
+    },
+    {
+      "id": "bug-008",
+      "timestamp": "2026-04-12T00:00:00.000Z",
+      "error_message": "CI Pull Request workflow failing: client::test_banned_sub, test_gated_sub, test_default_subscriptions, test_localization_popular all FAILED",
+      "file": "src/client.rs",
+      "root_cause": "All client tests make live HTTP requests to Reddit, which blocks GitHub Actions IPs. Also pull-request.yml was missing cmake/clang build deps for BoringSSL compilation.",
+      "fix": "Added #[ignore] to all 7 network-dependent tests in client.rs. Added cmake/perl/pkg-config/libclang-dev to test and clippy jobs in pull-request.yml.",
+      "tags": ["ci", "github-actions", "tests", "network", "boringssl", "reddit-blocking"],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-04-12T00:00:00.000Z"
     }
   ]
 }

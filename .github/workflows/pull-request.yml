@@ -20,12 +20,15 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
-      
+
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-      
+
+      - name: Install build dependencies
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends cmake perl pkg-config libclang-dev
+
       - name: Install cargo-nextest
         uses: taiki-e/install-action@nextest
 
@@ -62,6 +65,9 @@ jobs:
         with:
           toolchain: stable
           components: clippy
+
+      - name: Install build dependencies
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends cmake perl pkg-config libclang-dev
 
       - name: Run cargo clippy
         run: cargo clippy -- -D warnings

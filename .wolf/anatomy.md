@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-04-10T21:20:23.668Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-04-13T03:38:07.063Z
 > Files: 119 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../talos-argocd-proxmox/my-apps/media/redlib/
@@ -62,7 +62,7 @@
 - `build-artifacts.yaml` — CI: Release Build (~670 tok)
 - `ghcr.yml` — CI: Build and Push to GHCR (~1238 tok)
 - `main-rust.yml` — CI: Rust Build & Publish (~677 tok)
-- `pull-request.yml` — CI: Pull Request (~400 tok)
+- `pull-request.yml` — CI: Pull Request (~488 tok)
 
 ## .superpowers/brainstorm/525501-1773435161/
 
@@ -107,7 +107,7 @@
 ## src/
 
 - `analytics.rs` — Session timeout: 30 minutes of inactivity starts a new session. (~1107 tok)
-- `client.rs` — build_client, canonical_path, proxy, json (~5227 tok)
+- `client.rs` — build_client, canonical_path, proxy, json (~5315 tok)
 - `config.rs` — This is the local static that is initialized at runtime (technically at (~3282 tok)
 - `duplicates.rs` — Handler for post duplicates. (~2280 tok)
 - `instance_info.rs` — This is the local static that is initialized at runtime (technically at (~2381 tok)
