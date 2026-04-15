@@ -1185,6 +1185,22 @@ body.compact .post_thumbnail {
     letter-spacing: 0.02em;
 }
 
+.post_title_row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 6px;
+}
+
+.post_title_row .post_score {
+    flex-shrink: 0;
+    line-height: 1.5;
+}
+
+.post_title_row .post_title {
+    margin: 0;
+}
+
 .post_subreddit {
     font-weight: 700;
     color: var(--accent);

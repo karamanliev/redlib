@@ -2,7 +2,7 @@
 
 > OpenWolf's learning memory. Updated automatically as the AI learns from interactions.
 > Do not edit manually unless correcting an error.
-> Last updated: 2026-04-09
+> Last updated: 2026-04-15
 
 ## User Preferences
 
@@ -10,11 +10,13 @@
 - Prefers building Docker images locally and pushing to GHCR rather than relying solely on CI
 - Uses ArgoCD with selfHeal for GitOps deployments on Talos k8s
 - Image tags use `sha-XXXXXXX` format (short git SHA)
+- Prefers small stylistic changes that build on existing in-progress style commits instead of replacing them wholesale
 
 ## Key Learnings
 
 - **Project:** redlib
 - **Description:** > An alternative private front-end to Reddit, with its origins in [Libreddit](https://github.com/libreddit/libreddit).
+- `compose.dev.yaml` uses `build: .` without specifying `Dockerfile.build`, so it resolves to `Dockerfile` and downloads the latest released binary instead of compiling the local checkout
 - Reddit blocks redlib via Fastly ML bot detection based on TLS fingerprints, not IP or rate limits
 - wreq + BoringSSL (from Silvenga's PR #544) emulates real browser TLS fingerprints to evade detection
 - PostHog session replay requires: /decide endpoint accessible, ingestion-sessionreplay service running, /s/ route to replay-capture
@@ -26,6 +28,9 @@
 - Dockerfile.build is used by GHA (ghcr.yml) for CI — Alpine-based, needs cmake/clang-dev/linux-headers for BoringSSL
 - wreq/BoringSSL deps require Rust edition 2024 → minimum Rust 1.85
 - ArgoCD selfHeal: true reverts manual kubectl changes — must update Git source of truth
+- `templates/comment.html` already uses native `<details>` for comment collapse; extra click targets should toggle that same element instead of adding a separate collapse state
+- `src/main.rs` hardcodes individual static asset routes; new files under `static/` 404 until they are explicitly registered with `app.at(...)`
+- Duplicate listing cards in `templates/duplicates.html` need the same internal `.post_content` wrapper used by regular listing posts; without it, `post_footer` does not sit as the card's bottom row
 
 ## Do-Not-Repeat
 

@@ -5,7 +5,10 @@
 
 | Time | Description | Files | Outcome | ~Tokens |
 |------|------------|-------|---------|---------|
+| 12:04 | Refined duplicate card title/footer layout | templates/duplicates.html, static/style.css | moved score beside title and left footer with comments only | ~900 |
+| 12:01 | Fixed duplicate card footer layout | templates/duplicates.html | moved score into `post_footer` and wrapped duplicate card body in `post_content` so footer renders as bottom row | ~1200 |
 | 00:00 | Fix CI: ignore network tests + add BoringSSL deps to PR workflow | src/client.rs, .github/workflows/pull-request.yml | 7 tests #[ignore]'d, cmake/clang added to test+clippy jobs | ~2000 |
+| 12:15 | Investigated local Docker dev path | Dockerfile.build, compose.dev.yaml, Dockerfile, README.md | confirmed compose.dev builds released image path; source-build path is Dockerfile.build/Dockerfile.ubuntu | ~1800 |
 
 | HH:MM | description | file(s) | outcome | ~tokens |
 |-------|-------------|---------|---------|---------|
@@ -137,3 +140,7 @@
 | 23:56 | Edited src/subreddit.rs | modified test_gated_and_quarantined() | ~35 |
 | 23:57 | Edited src/post.rs | modified query_comments() | ~22 |
 | 23:57 | Session end: 21 writes across 8 files (client.rs, pull-request.yml, utils.rs, main-rust.yml, build-artifacts.yaml) | 13 reads | ~42443 tok |
+| 11:51 | Added clickable thread guide collapse behavior | templates/comment.html, templates/base.html, static/style.css, static/comment_threads.js | cargo check passed | ~6200 |
+| 11:51 | Session end: comment guide lines now toggle native comment details | .wolf/anatomy.md, .wolf/cerebrum.md, .wolf/buglog.json, .wolf/memory.md | bookkeeping updated | ~1800 |
+| 11:59 | Rewired comment guide click handler to direct sibling details binding | static/comment_threads.js, .wolf/buglog.json, .wolf/memory.md | cargo check passed | ~1400 |
+| 12:03 | Registered comment_threads.js in explicit static routes | src/main.rs, .wolf/cerebrum.md, .wolf/buglog.json, .wolf/memory.md | cargo check passed; browser 404 root cause fixed | ~1500 |

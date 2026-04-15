@@ -163,6 +163,62 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-04-13T03:55:53.848Z"
+    },
+    {
+      "id": "bug-011",
+      "timestamp": "2026-04-15T11:51:38+03:00",
+      "error_message": "Comment thread guide lines do not collapse or expand the thread when clicked",
+      "file": "src/main.rs",
+      "root_cause": "The browser could not load `/comment_threads.js` because Redlib serves static assets through explicit routes in `src/main.rs`, and the new file had no registered route. The JS was therefore never executed.",
+      "fix": "Added an explicit `/comment_threads.js` route in `src/main.rs`, kept the guide line as a button, and bound each line directly to its sibling details element while syncing aria-expanded with the native collapse state.",
+      "tags": [
+        "comments",
+        "ui",
+        "interaction",
+        "template",
+        "javascript"
+      ],
+      "related_bugs": [],
+      "occurrences": 3,
+      "last_seen": "2026-04-15T12:03:18+03:00"
+    },
+    {
+      "id": "bug-012",
+      "timestamp": "2026-04-15T12:01:54+03:00",
+      "error_message": "Duplicate post cards render `post_footer` beside the title area instead of as a bottom footer row, making the layout look wrong",
+      "file": "templates/duplicates.html",
+      "root_cause": "Duplicate cards omitted the standard `.post_content` wrapper used by listing posts, and rendered `post_score` outside `post_footer`, so the footer markup did not align with the shared card layout.",
+      "fix": "Wrapped duplicate card content in `.post_content` and moved the score into `.post_footer` alongside the comments link.",
+      "tags": [
+        "duplicates",
+        "ui",
+        "layout",
+        "template",
+        "footer"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-04-15T12:01:54+03:00"
+    },
+    {
+      "id": "bug-013",
+      "timestamp": "2026-04-15T12:04:20+03:00",
+      "error_message": "Duplicate post score placement should align with the title row while keeping the footer reserved for comments",
+      "file": "templates/duplicates.html",
+      "root_cause": "Putting the score in the footer fixed the footer position but did not match the intended visual hierarchy for duplicate cards.",
+      "fix": "Introduced a `post_title_row` wrapper, moved the score beside the title, and left only the comments link in the footer. Added minimal CSS to align the row cleanly.",
+      "tags": [
+        "duplicates",
+        "ui",
+        "layout",
+        "template",
+        "css"
+      ],
+      "related_bugs": [
+        "bug-012"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-04-15T12:04:20+03:00"
     }
   ]
 }
