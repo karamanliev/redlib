@@ -707,7 +707,7 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 				.map(|post| {
 					let comments_url = absolute_url(&base_url, &post.permalink);
 					let raw_out_url = post.out_url.as_deref();
-					let is_youtube = raw_out_url.is_some_and(|url| is_youtube_url(url));
+					let is_youtube = raw_out_url.is_some_and(is_youtube_url);
 					let external_url = raw_out_url.filter(|url| !is_reddit_owned_url(url)).map(|url| absolute_url(&base_url, url));
 					let title_suffix = if is_youtube {
 						Some("Video")
@@ -794,7 +794,7 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 						_ => String::new(),
 					};
 
-					let youtube_html = raw_out_url.and_then(|url| youtube_embed(url)).unwrap_or_default();
+					let youtube_html = raw_out_url.and_then(youtube_embed).unwrap_or_default();
 
 					let body_html = inline_image_links(&absolutize_html(
 						&base_url,
