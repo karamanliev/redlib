@@ -62,6 +62,7 @@ static INLINE_IMAGE_LINK: LazyLock<Regex> = LazyLock::new(|| {
 	Regex::new(r#"<p><a href="([^"]+(?:/img/|/preview/|https?://(?:i|preview|external-preview)\.redd\.it/[^"]+|\.(?:png|jpe?g|gif|webp))(?:\?[^"]*)?)">.*?</a></p>"#).unwrap()
 });
 static YOUTUBE_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?:youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/)([a-zA-Z0-9_-]{11})").unwrap());
+static HTML_TAG: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<[^>]+>").unwrap());
 
 // SERVICES
 pub async fn community(req: Request<Body>) -> Result<Response<Body>, String> {
@@ -618,11 +619,30 @@ fn absolutize_html(base_url: &str, html: &str) -> String {
 }
 
 fn inline_image_links(html: &str) -> String {
-	INLINE_IMAGE_LINK.replace_all(html, r#"<p><img src="$1" alt=""></p>"#).to_string()
+	INLINE_IMAGE_LINK.replace_all(html, r#"<p><img src="$1" alt="" /></p>"#).to_string()
 }
 
 fn html_url(url: &str) -> String {
 	encode_minimal(&decode_html(url).unwrap_or_else(|_| url.to_string()))
+}
+
+fn rss_description(post: &Post) -> String {
+	const MAX_LEN: usize = 280;
+	let decoded = decode_html(&post.body).unwrap_or_else(|_| post.body.to_string());
+	let plain = HTML_TAG.replace_all(&decoded, " ");
+	let normalized = plain.split_whitespace().collect::<Vec<_>>().join(" ");
+
+	if normalized.is_empty() {
+		post.title.clone()
+	} else {
+		let char_count = normalized.chars().count();
+		if char_count <= MAX_LEN {
+			normalized
+		} else {
+			let truncated = normalized.chars().take(MAX_LEN - 3).collect::<String>();
+			format!("{truncated}...")
+		}
+	}
 }
 
 fn youtube_embed(url: &str) -> Option<String> {
@@ -675,7 +695,32 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 	let sub = req.param("sub").unwrap_or_default();
 	let post_sort = req.cookie("post_sort").map_or_else(|| "hot".to_string(), |c| c.value().to_string());
 	let sort = req.param("sort").unwrap_or_else(|| req.param("id").unwrap_or(post_sort));
-	let base_url = config::get_setting("REDLIB_FULL_URL").unwrap_or_default().trim_end_matches('/').to_string();
+	let base_url = config::get_setting("REDLIB_FULL_URL")
+		.filter(|url| !url.trim().is_empty())
+		.map(|url| url.trim_end_matches('/').to_string())
+		.or_else(|| {
+			let host = req.headers().get("host").and_then(|value| value.to_str().ok()).unwrap_or_default().trim();
+			if host.is_empty() {
+				None
+			} else {
+				let forwarded_proto = req
+					.headers()
+					.get("x-forwarded-proto")
+					.and_then(|value| value.to_str().ok())
+					.and_then(|value| value.split(',').next())
+					.map(str::trim)
+					.filter(|value| !value.is_empty());
+				let scheme = forwarded_proto.unwrap_or_else(|| {
+					if host.starts_with("localhost") || host.starts_with("127.0.0.1") || host.starts_with("[::1]") {
+						"http"
+					} else {
+						"https"
+					}
+				});
+				Some(format!("{scheme}://{host}"))
+			}
+		})
+		.unwrap_or_default();
 
 	// Get path
 	let path = format!("/r/{sub}/{sort}.json?{}", req.uri().query().unwrap_or_default());
@@ -725,7 +770,7 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 					let media_html = match post.post_type.as_str() {
 						"image" if !post.media.url.is_empty() => {
 							let src = absolute_url(&base_url, &post.media.url);
-							format!("<p><img src=\"{}\" alt=\"{}\"></p>", html_url(&src), encode_minimal(&post.title))
+							format!("<p><img src=\"{}\" alt=\"{}\" /></p>", html_url(&src), encode_minimal(&post.title))
 						}
 						"video" | "gif" if !post.media.url.is_empty() => {
 							let poster = absolute_url(&base_url, &post.media.poster);
@@ -738,7 +783,7 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 								format!("<p><a href=\"{}\">Video link</a></p>", html_url(&comments_url))
 							} else {
 								format!(
-									"<p><video controls preload=\"metadata\" poster=\"{}\"><source src=\"{}\"><img src=\"{}\" alt=\"{}\"></video></p>",
+									"<p><video controls preload=\"metadata\" poster=\"{}\"><source src=\"{}\"><img src=\"{}\" alt=\"{}\" /></video></p>",
 									html_url(&poster),
 									html_url(&hls_src),
 									html_url(&poster),
@@ -762,7 +807,7 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 									format!("<p>{}</p>", encode_minimal(&item.caption))
 								};
 								Some(format!(
-									"<p><img src=\"{}\" alt=\"{}\"{}{}></p>{}",
+									"<p><img src=\"{}\" alt=\"{}\"{}{} /></p>{}",
 									html_url(&src),
 									encode_minimal(&item.caption),
 									width_attr,
@@ -783,7 +828,7 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 								format!("<p><a href=\"{}\">Video link</a></p>", html_url(&comments_url))
 							} else {
 								format!(
-									"<p><video controls preload=\"metadata\" poster=\"{}\"><source src=\"{}\"><img src=\"{}\" alt=\"{}\"></video></p>",
+									"<p><video controls preload=\"metadata\" poster=\"{}\"><source src=\"{}\"><img src=\"{}\" alt=\"{}\" /></video></p>",
 									html_url(&poster),
 									html_url(&hls_src),
 									html_url(&poster),
@@ -794,7 +839,11 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 						_ => String::new(),
 					};
 
-					let youtube_html = raw_out_url.and_then(youtube_embed).unwrap_or_default();
+					let youtube_html = if media_html.is_empty() {
+						raw_out_url.and_then(youtube_embed).unwrap_or_default()
+					} else {
+						String::new()
+					};
 
 					let body_html = inline_image_links(&absolutize_html(
 						&base_url,
@@ -823,6 +872,7 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 						.filter(|html| !html.is_empty())
 						.collect::<Vec<_>>()
 						.join("");
+					let item_description = rss_description(&post);
 
 					Item {
 						title: Some(item_title),
@@ -835,7 +885,7 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 						}),
 						content: Some(item_html.clone()),
 						pub_date: Some(DateTime::from_timestamp(post.created_ts as i64, 0).unwrap_or_default().to_rfc2822()),
-						description: Some(item_html),
+						description: Some(item_description),
 						..Default::default()
 					}
 				})
