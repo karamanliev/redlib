@@ -1251,6 +1251,7 @@ body.compact .post_thumbnail {
 
 .post.highlighted .post_score {
     grid-area: post_score;
+    align-items: flex-start;
     padding-top: 19px;
     padding-left: 12px;
     padding-right: 12px;
