@@ -4,15 +4,15 @@
 <a class="deeper_replies" href="{{ post_link }}{{ parent_id }}">&rarr; More replies ({{ more_count }})</a>
 {% else if kind == "t1" %}
 <div id="{{ id }}" class="comment">
-	<div class="comment_left">
-    <p class="comment_score" title="{{ score.1 }}">
+	<div class="comment_left{% if collapsed || auto_collapsed %} collapsed{% endif %}">
+		<button class="comment_score" type="button" title="{{ score.1 }}" aria-label="Toggle comment thread" aria-expanded="{% if (!collapsed && !auto_collapsed) || highlighted %}true{% else %}false{% endif %}">
          {% if prefs.hide_score != "on" %}
          {{ score.0 }}
          {% else %}
          &#x2022;
          {% endif %}
-    </p>
-        <div class="line depth_{{ depth.min(4) }}"></div>
+		</button>
+		<button class="line depth_{{ depth.min(4) }}" type="button" aria-label="Toggle comment thread" aria-expanded="{% if (!collapsed && !auto_collapsed) || highlighted %}true{% else %}false{% endif %}"></button>
 	</div>
 	<details class="comment_right" {% if (!collapsed && !auto_collapsed) || highlighted %}open{% endif %}>
 		<summary class="comment_data">

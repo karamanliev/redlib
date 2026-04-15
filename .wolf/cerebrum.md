@@ -11,6 +11,8 @@
 - Uses ArgoCD with selfHeal for GitOps deployments on Talos k8s
 - Image tags use `sha-XXXXXXX` format (short git SHA)
 - Prefers small stylistic changes that build on existing in-progress style commits instead of replacing them wholesale
+- Prefers the comment score pill attached naturally to the thread line; avoid negative bottom offsets like `margin-bottom: -2px` when a cleaner layout works without them
+- Prefers collapse auto-scroll only when the collapsed comment's score pill is off-screen; if the pill is already visible, avoid moving the viewport
 
 ## Key Learnings
 

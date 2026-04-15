@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-04-13T03:57:28.543Z
-> Files: 119 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-04-15T11:51:38+03:00
+> Files: 120 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../talos-argocd-proxmox/my-apps/media/redlib/
 
@@ -126,6 +126,7 @@
 ## static/
 
 - `check_update.js` — checkInstanceUpdateStatus: checkOtherInstances (~815 tok)
+- `comment_threads.js` — syncCommentThreadToggle: toggles sibling comment details from guide line clicks (~243 tok)
 - `copy.js` — copy: set_listener (~76 tok)
 - `highlighted.js` (~18 tok)
 - `manifest.json` (~122 tok)

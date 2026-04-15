@@ -149,3 +149,8 @@
 | 11:51 | Session end: comment guide lines now toggle native comment details | .wolf/anatomy.md, .wolf/cerebrum.md, .wolf/buglog.json, .wolf/memory.md | bookkeeping updated | ~1800 |
 | 11:59 | Rewired comment guide click handler to direct sibling details binding | static/comment_threads.js, .wolf/buglog.json, .wolf/memory.md | cargo check passed | ~1400 |
 | 12:03 | Registered comment_threads.js in explicit static routes | src/main.rs, .wolf/cerebrum.md, .wolf/buglog.json, .wolf/memory.md | cargo check passed; browser 404 root cause fixed | ~1500 |
+| 12:49 | Made comment score toggle thread and kept collapsed gutter stub visible | templates/comment.html, static/style.css, static/comment_threads.js, .wolf/buglog.json, .wolf/memory.md | cargo check passed | ~1900 |
+| 12:52 | Tightened gutter spacing and shortened collapsed line stub | static/style.css, .wolf/memory.md | cargo check passed | ~700 |
+| 12:55 | Slimmed mobile comment lines and centered compact score pill | static/style.css, .wolf/cerebrum.md, .wolf/memory.md | cargo check passed | ~1100 |
+| 12:58 | Reduced mobile comment header top padding, arrow size, and line width | static/style.css, .wolf/memory.md | cargo check passed | ~650 |
+| 13:09 | Added conditional auto-scroll on comment collapse when score is off-screen | static/comment_threads.js, .wolf/cerebrum.md, .wolf/memory.md | cargo check passed | ~1200 |

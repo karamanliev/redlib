@@ -44,6 +44,7 @@
 		});
 		</script>
 		{% endif %}
+		<script src="/comment_threads.js?v={{ env!("CARGO_PKG_VERSION") }}" defer></script>
 		</head>
 	<body class="
 		{% if prefs.layout != "" %}{{ prefs.layout }}{% endif %}

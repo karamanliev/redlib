@@ -183,6 +183,26 @@
       "last_seen": "2026-04-15T12:03:18+03:00"
     },
     {
+      "id": "bug-013",
+      "timestamp": "2026-04-15T12:49:41+03:00",
+      "error_message": "Collapsed comment gutters are inconsistent: some collapsed comments lose the visible line stub, and comment scores do not toggle the thread",
+      "file": "templates/comment.html",
+      "root_cause": "Only the guide line was wired as a toggle, and the gutter layout relied on a flexible `height: 100%` line that could collapse inconsistently when the comment body was hidden.",
+      "fix": "Converted the score pill into the same toggle control, synced both controls through comment_threads.js, and changed the gutter CSS to keep a minimum visible line stub for collapsed comments.",
+      "tags": [
+        "comments",
+        "ui",
+        "interaction",
+        "css",
+        "javascript"
+      ],
+      "related_bugs": [
+        "bug-011"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-04-15T12:49:41+03:00"
+    },
+    {
       "id": "bug-012",
       "timestamp": "2026-04-15T12:01:54+03:00",
       "error_message": "Duplicate post cards render `post_footer` beside the title area instead of as a bottom footer row, making the layout look wrong",
