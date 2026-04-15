@@ -5,6 +5,11 @@
 
 | Time | Description | Files | Outcome | ~Tokens |
 |------|------------|-------|---------|---------|
+| 12:43 | Fixed Firefox score wrapping | static/style.css | prevented score arrow and digits from wrapping onto separate lines in feed cards | ~500 |
+| 12:30 | Fixed oversized feed title click target | templates/utils.html, static/style.css | wrapped list post title link so only the text, not the full row width, is clickable | ~700 |
+| 12:30 | Restored score arrow on desktop | static/style.css | moved `post_score` arrow styling out of mobile-only CSS so desktop and mobile both show it | ~600 |
+| 12:26 | Refined mobile feed thumbnails | templates/utils.html, static/style.css | made mobile thumbnails full width and removed empty placeholder thumbnails from list cards | ~1000 |
+| 12:24 | Fixed mobile subreddit card layout | templates/utils.html, static/style.css | moved list post score beside title and stacked thumbnails below content on mobile | ~1500 |
 | 12:04 | Refined duplicate card title/footer layout | templates/duplicates.html, static/style.css | moved score beside title and left footer with comments only | ~900 |
 | 12:01 | Fixed duplicate card footer layout | templates/duplicates.html | moved score into `post_footer` and wrapped duplicate card body in `post_content` so footer renders as bottom row | ~1200 |
 | 00:00 | Fix CI: ignore network tests + add BoringSSL deps to PR workflow | src/client.rs, .github/workflows/pull-request.yml | 7 tests #[ignore]'d, cmake/clang added to test+clippy jobs | ~2000 |

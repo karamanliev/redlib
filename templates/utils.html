@@ -176,7 +176,7 @@
 			{% if post.num_duplicates > 0 %}
 			<li>
 				<a href="/r/{{ post.community }}/duplicates/{{ post.id }}">
-					dup<span class="desktop_item">licat</span>es
+					dup<span class="inline_desktop_item">licat</span>es
 				</a>
 			</li>
 			{% endif %}
@@ -251,14 +251,7 @@
 				{% endfor %}
 			{% endif %}
 		</div>
-		<a class="post_title" href="{{ post.permalink }}">{{ post.title }}</a>
-		{% if (prefs.layout.is_empty() || prefs.layout == "card") && !post.body.is_empty() %}
-		<div class="post_body post_preview">
-			{{ post.body|safe }}
-		</div>
-		{% endif %}
-		{% call poll(post) %}
-		<div class="post_footer">
+		<div class="post_title_row">
 			<span class="post_score {{ post.score_tier }}" title="{{ post.score.1 }}">
 				{% if prefs.hide_score != "on" %}
 				{{ post.score.0 }}
@@ -266,7 +259,17 @@
 				&#x2022;
 				{% endif %}
 			</span>
-			<span class="dot">&bull;</span>
+			<div class="post_title_wrap">
+				<a class="post_title" href="{{ post.permalink }}">{{ post.title }}</a>
+			</div>
+		</div>
+		{% if (prefs.layout.is_empty() || prefs.layout == "card") && !post.body.is_empty() %}
+		<div class="post_body post_preview">
+			{{ post.body|safe }}
+		</div>
+		{% endif %}
+		{% call poll(post) %}
+		<div class="post_footer">
 			<a href="{{ post.permalink }}" class="post_comments" title="{{ post.comments.1 }} {% if post.comments.1 == "1" %}comment{% else %}comments{% endif %}">{{ post.comments.0 }} {% if post.comments.1 == "1" %}comment{% else %}comments{% endif %}</a>
 			<span class="dot">&bull;</span>
 			<a class="post_share" href="{{ post.permalink }}">share</a>
@@ -276,22 +279,8 @@
 			{% endif %}
 		</div>
 	</div>
+	{% if !post.thumbnail.url.is_empty() %}
 	<div class="post_thumbnail">
-		{% if post.post_type == "self" || post.thumbnail.url.is_empty() %}
-		<a href="{{ post.permalink }}">
-			<svg viewBox="0 0 100 100" width="70" height="70" xmlns="http://www.w3.org/2000/svg">
-				<title>Thumbnail</title>
-				{% if post.post_type == "self" %}
-				<rect x="15" y="20" width="70" height="8" rx="4" fill="currentColor" opacity="0.3"/>
-				<rect x="15" y="36" width="55" height="8" rx="4" fill="currentColor" opacity="0.3"/>
-				<rect x="15" y="52" width="65" height="8" rx="4" fill="currentColor" opacity="0.3"/>
-				<rect x="15" y="68" width="40" height="8" rx="4" fill="currentColor" opacity="0.3"/>
-				{% else %}
-				<path d="M35,15h-15a10,10 0,0,0 0,20h25a10,10 0,0,0 10,-10m-12.5,0a10, 10 0,0,1 10, -10h25a10,10 0,0,1 0,20h-15" fill="none" stroke-width="5" stroke-linecap="round" stroke="currentColor" opacity="0.3" transform="translate(5,30)"/>
-				{% endif %}
-			</svg>
-		</a>
-		{% else %}
 		<a href="{% if post.post_type == "link" %}{{ post.media.url }}{% else %}{{ post.permalink }}{% endif %}" rel="nofollow">
 			<svg viewBox="0 0 {{ post.thumbnail.width }} {{ post.thumbnail.height }}" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
 				<image width="100%" height="100%" href="{{ post.thumbnail.url }}"/>
@@ -300,8 +289,8 @@
 				</desc>
 			</svg>
 		</a>
-		{% endif %}
 	</div>
+	{% endif %}
 </div>
 {%- endmacro %}
 

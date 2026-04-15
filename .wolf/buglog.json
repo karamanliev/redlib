@@ -219,6 +219,109 @@
       ],
       "occurrences": 1,
       "last_seen": "2026-04-15T12:04:20+03:00"
+    },
+    {
+      "id": "bug-014",
+      "timestamp": "2026-04-15T12:24:04+03:00",
+      "error_message": "Subreddit feed cards look broken on mobile because the thumbnail stays beside the text/footer, and the score should sit next to the post title instead of in the footer",
+      "file": "templates/utils.html",
+      "root_cause": "List post cards kept a horizontal thumbnail layout at mobile widths, which squeezed footer items into awkward wraps, and the score remained in the footer instead of the title row.",
+      "fix": "Moved the score into a shared `post_title_row` in the list post template and changed mobile feed cards to stack vertically with the thumbnail below the text content.",
+      "tags": [
+        "feed",
+        "mobile",
+        "ui",
+        "layout",
+        "template",
+        "css"
+      ],
+      "related_bugs": [
+        "bug-013"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-04-15T12:24:04+03:00"
+    },
+    {
+      "id": "bug-015",
+      "timestamp": "2026-04-15T12:26:03+03:00",
+      "error_message": "Mobile feed thumbnails should be full width, and posts without thumbnails should not render placeholder image boxes",
+      "file": "templates/utils.html",
+      "root_cause": "The list template always rendered a thumbnail container, including placeholder SVGs for self posts and posts without thumbnails, which looked especially broken after switching the mobile layout to bottom-stacked media.",
+      "fix": "Rendered `.post_thumbnail` only when `post.thumbnail.url` exists and updated mobile thumbnail CSS to use full-width blocks with auto height.",
+      "tags": [
+        "feed",
+        "mobile",
+        "thumbnail",
+        "ui",
+        "template",
+        "css"
+      ],
+      "related_bugs": [
+        "bug-014"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-04-15T12:26:03+03:00"
+    },
+    {
+      "id": "bug-016",
+      "timestamp": "2026-04-15T12:30:00+03:00",
+      "error_message": "There is no up/down arrow next to the score on desktop",
+      "file": "static/style.css",
+      "root_cause": "The `post_score::before` arrow was defined only inside the `@media screen and (max-width: 507px)` block, so desktop layouts never rendered it.",
+      "fix": "Moved the `post_score::before` arrow into the base `.post_score` styles and added inline-flex alignment so the arrow and number line up consistently on all screen sizes.",
+      "tags": [
+        "score",
+        "desktop",
+        "ui",
+        "css"
+      ],
+      "related_bugs": [
+        "bug-014",
+        "bug-015"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-04-15T12:30:00+03:00"
+    },
+    {
+      "id": "bug-017",
+      "timestamp": "2026-04-15T12:30:58+03:00",
+      "error_message": "The post title is full width on desktop and clicking outside the title still opens the post",
+      "file": "templates/utils.html",
+      "root_cause": "The `.post_title` anchor was the flex item with `flex: 1`, so it expanded across the remaining horizontal space in the title row.",
+      "fix": "Wrapped the title link in a `.post_title_wrap` container that owns the flexible width, leaving the anchor sized to its text content.",
+      "tags": [
+        "feed",
+        "desktop",
+        "click-target",
+        "ui",
+        "template",
+        "css"
+      ],
+      "related_bugs": [
+        "bug-014",
+        "bug-016"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-04-15T12:30:58+03:00"
+    },
+    {
+      "id": "bug-018",
+      "timestamp": "2026-04-15T12:43:38+03:00",
+      "error_message": "Only on Firefox some scores look weirdly cut on a new line",
+      "file": "static/style.css",
+      "root_cause": "Firefox was allowed to wrap the inline score content, so the vote arrow and digits could break onto separate lines in narrow title rows.",
+      "fix": "Added `white-space: nowrap` to `.post_score` so the arrow and score stay together across browsers.",
+      "tags": [
+        "firefox",
+        "score",
+        "ui",
+        "css"
+      ],
+      "related_bugs": [
+        "bug-016"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-04-15T12:43:38+03:00"
     }
   ]
 }

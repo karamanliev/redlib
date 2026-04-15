@@ -31,6 +31,11 @@
 - `templates/comment.html` already uses native `<details>` for comment collapse; extra click targets should toggle that same element instead of adding a separate collapse state
 - `src/main.rs` hardcodes individual static asset routes; new files under `static/` 404 until they are explicitly registered with `app.at(...)`
 - Duplicate listing cards in `templates/duplicates.html` need the same internal `.post_content` wrapper used by regular listing posts; without it, `post_footer` does not sit as the card's bottom row
+- Feed listing posts in `templates/utils.html` work better on mobile when the score shares a row with the title and the thumbnail stacks beneath the text content instead of staying beside it
+- Feed list cards should skip rendering `.post_thumbnail` entirely when `post.thumbnail.url` is empty; placeholder boxes look broken once thumbnails become full-width on mobile
+- `post_score::before` should live in the base score styles, not only a mobile media query, otherwise desktop feed cards lose the vote arrow icon
+- In feed title rows, the flexible width should be applied to a non-link wrapper rather than the `.post_title` anchor itself, or the entire leftover row becomes an oversized click target
+- Firefox may wrap the arrow and digits in `.post_score` onto separate lines unless the score is explicitly `white-space: nowrap`
 
 ## Do-Not-Repeat
 

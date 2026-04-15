@@ -396,7 +396,7 @@ main {
 #column_one {
     width: 100%;
     border-radius: 5px;
-    max-width: 900px;
+    max-width: 800px;
     overflow: inherit;
 }
 @media screen and (max-width: 800px) {
@@ -1150,10 +1150,18 @@ body.compact .post_thumbnail {
 }
 
 .post_score {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2em;
+    white-space: nowrap;
     font-size: 14px;
     font-weight: 800;
     color: var(--accent);
     letter-spacing: -0.02em;
+}
+
+.post_score::before {
+    content: "↑";
 }
 
 /* Score intensity tiers — hotter scores glow brighter */
@@ -1195,6 +1203,11 @@ body.compact .post_thumbnail {
 .post_title_row .post_score {
     flex-shrink: 0;
     line-height: 1.5;
+}
+
+.post_title_row .post_title_wrap {
+    flex: 1;
+    min-width: 0;
 }
 
 .post_title_row .post_title {
@@ -2285,6 +2298,38 @@ th {
         display: none;
     }
 
+    .post:not(.highlighted) {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .post:not(.highlighted) .post_content {
+        width: 100%;
+    }
+
+    .post:not(.highlighted) .post_thumbnail,
+    body.compact .post:not(.highlighted) .post_thumbnail {
+        order: 2;
+        width: 100%;
+        height: auto;
+        max-width: none;
+        align-self: stretch;
+        margin-top: 4px;
+    }
+
+    .post:not(.highlighted) .post_thumbnail a,
+    body.compact .post:not(.highlighted) .post_thumbnail a {
+        display: block;
+        height: auto;
+    }
+
+    .post:not(.highlighted) .post_thumbnail svg,
+    body.compact .post:not(.highlighted) .post_thumbnail svg {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
     /* Disable hover lift on touch devices (sticky :hover) */
     .post:not(.highlighted):hover {
         transform: none;
@@ -2389,15 +2434,8 @@ th {
         padding: 0;
     }
 
-    .post_score::before {
-        content: "↑";
-    }
-
     .post_header {
         font-size: 14px;
-    }
-    .post_footer {
-        margin-left: 15px;
     }
 
     .replies > .comment {
