@@ -396,7 +396,7 @@ main {
 #column_one {
     width: 100%;
     border-radius: 5px;
-    max-width: 800px;
+    max-width: 750px;
     overflow: inherit;
 }
 @media screen and (max-width: 800px) {
@@ -497,10 +497,6 @@ aside {
     border-radius: 5px;
     overflow: hidden;
 }
-@media screen and (min-width: 800px) {
-    #subreddit, #sidebar { min-width: 350px; }
-}
-
 #user *,
 #subreddit * {
     text-align: center;
@@ -556,13 +552,12 @@ aside {
 }
 
 #user_details,
-#sub_details,
-#sub_actions,
-#user_actions {
+#sub_details {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
 }
 
+#sub_actions,
 #user_actions {
     width: 100%;
     display: flex;
@@ -570,6 +565,7 @@ aside {
     flex-direction: column;
 }
 
+#sub_actions button,
 #user_actions button {
     width: 100%;
 }
@@ -2313,6 +2309,7 @@ th {
     }
     #user { margin: 0 0 20px; }
 
+    #sub_actions,
     #user_actions {
         flex-direction: row;
         gap: 8px;
