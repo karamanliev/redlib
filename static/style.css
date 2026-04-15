@@ -1224,6 +1224,7 @@ body.compact .post_thumbnail {
     grid-area: post_score;
     padding-top: 19px;
     padding-left: 12px;
+    padding-right: 12px;
     text-align: center;
     border-radius: 5px 0 0 5px;
     background: rgba(224, 67, 79, 0.08);
@@ -1559,6 +1560,10 @@ body.compact .post_thumbnail {
 
 #post_links > li {
     margin-right: 15px;
+}
+
+.inline_desktop_item {
+    display: inline;
 }
 
 .desktop_item {
@@ -2446,6 +2451,10 @@ th {
         margin-right: 10px;
     }
     .post_footer > p > span#upvoted {
+        display: none;
+    }
+
+    .inline_desktop_item {
         display: none;
     }
 
