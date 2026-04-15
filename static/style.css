@@ -1757,6 +1757,10 @@ body.compact .post_thumbnail {
     flex: 0 1 auto;
 }
 
+.comment_data::marker {
+    font-size: 18px;
+}
+
 .comment_image {
     max-width: 500px;
     align-self: center;
@@ -2500,9 +2504,6 @@ th {
         row-gap: 5px;
     }
 
-    .comment_data::marker {
-        font-size: 18px;
-    }
     .user-comment .comment_data > .comment_link {
         order: 2;
     }
