@@ -1,14 +1,14 @@
 #![allow(clippy::cmp_owned)]
 
+use crate::config;
 use crate::utils::{
 	catch_random, error, filter_posts, format_num, format_url, get_filters, info, nsfw_landing, param, redirect, rewrite_urls, setting, template, val, Post, Preferences,
 	Subreddit,
 };
 use crate::{client::json, server::RequestExt, server::ResponseExt};
-use crate::{config, utils};
 use askama::Template;
 use cookie::Cookie;
-use htmlescape::decode_html;
+use htmlescape::{decode_html, encode_minimal};
 use hyper::{Body, Request, Response};
 
 use chrono::DateTime;
@@ -58,6 +58,10 @@ struct WallTemplate {
 }
 
 static GEO_FILTER_MATCH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"geo_filter=(?<region>\w+)").unwrap());
+static INLINE_IMAGE_LINK: LazyLock<Regex> = LazyLock::new(|| {
+	Regex::new(r#"<p><a href="([^"]+(?:/img/|/preview/|https?://(?:i|preview|external-preview)\.redd\.it/[^"]+|\.(?:png|jpe?g|gif|webp))(?:\?[^"]*)?)">.*?</a></p>"#).unwrap()
+});
+static YOUTUBE_ID: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?:youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/)([a-zA-Z0-9_-]{11})").unwrap());
 
 // SERVICES
 pub async fn community(req: Request<Body>) -> Result<Response<Body>, String> {
@@ -592,18 +596,86 @@ async fn subreddit(sub: &str, quarantined: bool) -> Result<Subreddit, String> {
 	})
 }
 
+fn absolute_url(base_url: &str, url: &str) -> String {
+	if url.is_empty() {
+		String::new()
+	} else if url.starts_with('/') && !base_url.is_empty() {
+		format!("{base_url}{url}")
+	} else {
+		url.to_string()
+	}
+}
+
+fn absolutize_html(base_url: &str, html: &str) -> String {
+	if base_url.is_empty() {
+		html.to_string()
+	} else {
+		html
+			.replace("href=\"/", &format!("href=\"{base_url}/"))
+			.replace("src=\"/", &format!("src=\"{base_url}/"))
+			.replace("poster=\"/", &format!("poster=\"{base_url}/"))
+	}
+}
+
+fn inline_image_links(html: &str) -> String {
+	INLINE_IMAGE_LINK.replace_all(html, r#"<p><img src="$1" alt=""></p>"#).to_string()
+}
+
+fn html_url(url: &str) -> String {
+	encode_minimal(&decode_html(url).unwrap_or_else(|_| url.to_string()))
+}
+
+fn youtube_embed(url: &str) -> Option<String> {
+	let id = YOUTUBE_ID.captures(url)?.get(1)?.as_str();
+	Some(format!(
+		r#"<iframe width="560" height="315" src="https://www.youtube.com/embed/{}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>"#,
+		id
+	))
+}
+
+fn is_youtube_url(url: &str) -> bool {
+	url.contains("youtube.com/watch") || url.contains("youtu.be/") || url.contains("youtube.com/embed/")
+}
+
+fn is_reddit_owned_url(url: &str) -> bool {
+	let lower = url.to_ascii_lowercase();
+	lower.starts_with("/r/")
+		|| lower.contains("://reddit.com/")
+		|| lower.contains("://www.reddit.com/")
+		|| lower.contains("://old.reddit.com/")
+		|| lower.contains("://np.reddit.com/")
+		|| lower.contains("://redd.it/")
+		|| lower.contains("://i.redd.it/")
+		|| lower.contains("://v.redd.it/")
+		|| lower.contains("://preview.redd.it/")
+		|| lower.contains("://external-preview.redd.it/")
+}
+
+fn media_title_suffix(post: &Post, raw_out_url: Option<&str>) -> Option<&'static str> {
+	if post.post_type == "gallery" || raw_out_url.is_some_and(|url| url.contains("/gallery/")) {
+		Some("gallery")
+	} else if post.post_type == "image" || post.domain == "i.redd.it" || raw_out_url.is_some_and(|url| url.contains("i.redd.it")) {
+		Some("image")
+	} else if post.post_type == "video" || post.post_type == "gif" || post.domain == "v.redd.it" || raw_out_url.is_some_and(|url| url.contains("v.redd.it")) {
+		Some("video")
+	} else {
+		None
+	}
+}
+
 pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 	if config::get_setting("REDLIB_ENABLE_RSS").is_none() {
 		return Ok(error(req, "RSS is disabled on this instance.").await.unwrap_or_default());
 	}
 
 	use hyper::header::CONTENT_TYPE;
-	use rss::{ChannelBuilder, Item};
+	use rss::{ChannelBuilder, Guid, Image, Item};
 
 	// Get subreddit
 	let sub = req.param("sub").unwrap_or_default();
 	let post_sort = req.cookie("post_sort").map_or_else(|| "hot".to_string(), |c| c.value().to_string());
 	let sort = req.param("sort").unwrap_or_else(|| req.param("id").unwrap_or(post_sort));
+	let base_url = config::get_setting("REDLIB_FULL_URL").unwrap_or_default().trim_end_matches('/').to_string();
 
 	// Get path
 	let path = format!("/r/{sub}/{sort}.json?{}", req.uri().query().unwrap_or_default());
@@ -616,23 +688,156 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 
 	// Build the RSS feed
 	let channel = ChannelBuilder::default()
-		.title(&subreddit.title)
+		.title(format!("/r/{}", subreddit.name))
+		.link(if base_url.is_empty() {
+			format!("/r/{}", subreddit.name)
+		} else {
+			format!("{base_url}/r/{}", subreddit.name)
+		})
 		.description(&subreddit.description)
+		.image(Image {
+			url: absolute_url(&base_url, "/favicon.png"),
+			title: "Redlib".to_string(),
+			link: if base_url.is_empty() { "/".to_string() } else { base_url.clone() },
+			..Default::default()
+		})
 		.items(
 			posts
 				.into_iter()
-				.map(|post| Item {
-					title: Some(post.title.to_string()),
-					link: Some(format_url(&utils::get_post_url(&post))),
-					author: Some(post.author.name),
-					content: Some(rewrite_urls(&decode_html(&post.body).unwrap())),
-					pub_date: Some(DateTime::from_timestamp(post.created_ts as i64, 0).unwrap_or_default().to_rfc2822()),
-					description: Some(format!(
-						"<a href='{}{}'>Comments</a>",
-						config::get_setting("REDLIB_FULL_URL").unwrap_or_default(),
-						post.permalink
-					)),
-					..Default::default()
+				.map(|post| {
+					let comments_url = absolute_url(&base_url, &post.permalink);
+					let raw_out_url = post.out_url.as_deref();
+					let is_youtube = raw_out_url.is_some_and(|url| is_youtube_url(url));
+					let external_url = raw_out_url.filter(|url| !is_reddit_owned_url(url)).map(|url| absolute_url(&base_url, url));
+					let title_suffix = if is_youtube {
+						Some("Video")
+					} else if external_url.is_some() && !post.domain.is_empty() {
+						Some(post.domain.as_str())
+					} else {
+						media_title_suffix(&post, raw_out_url)
+					};
+					let item_title = if let Some(suffix) = title_suffix {
+						format!("{} ({suffix})", post.title)
+					} else {
+						post.title.to_string()
+					};
+
+					let media_html = match post.post_type.as_str() {
+						"image" if !post.media.url.is_empty() => {
+							let src = absolute_url(&base_url, &post.media.url);
+							format!("<p><img src=\"{}\" alt=\"{}\"></p>", html_url(&src), encode_minimal(&post.title))
+						}
+						"video" | "gif" if !post.media.url.is_empty() => {
+							let poster = absolute_url(&base_url, &post.media.poster);
+							let hls_src = if !post.media.alt_url.is_empty() {
+								absolute_url(&base_url, &post.media.alt_url)
+							} else {
+								absolute_url(&base_url, &post.media.url)
+							};
+							if poster.is_empty() {
+								format!("<p><a href=\"{}\">Video link</a></p>", html_url(&comments_url))
+							} else {
+								format!(
+									"<p><video controls preload=\"metadata\" poster=\"{}\"><source src=\"{}\"><img src=\"{}\" alt=\"{}\"></video></p>",
+									html_url(&poster),
+									html_url(&hls_src),
+									html_url(&poster),
+									encode_minimal(&post.title)
+								)
+							}
+						}
+						"gallery" => post
+							.gallery
+							.iter()
+							.filter_map(|item| {
+								let src = absolute_url(&base_url, &item.url);
+								if src.is_empty() {
+									return None;
+								}
+								let width_attr = if item.width > 0 { format!(" width=\"{}\"", item.width) } else { String::new() };
+								let height_attr = if item.height > 0 { format!(" height=\"{}\"", item.height) } else { String::new() };
+								let caption_html = if item.caption.is_empty() {
+									String::new()
+								} else {
+									format!("<p>{}</p>", encode_minimal(&item.caption))
+								};
+								Some(format!(
+									"<p><img src=\"{}\" alt=\"{}\"{}{}></p>{}",
+									html_url(&src),
+									encode_minimal(&item.caption),
+									width_attr,
+									height_attr,
+									caption_html
+								))
+							})
+							.collect::<Vec<_>>()
+							.join(""),
+						_ if raw_out_url.is_some_and(|url| url.contains("v.redd.it")) => {
+							let poster = absolute_url(&base_url, &post.media.poster);
+							let hls_src = if !post.media.alt_url.is_empty() {
+								absolute_url(&base_url, &post.media.alt_url)
+							} else {
+								absolute_url(&base_url, &post.media.url)
+							};
+							if poster.is_empty() {
+								format!("<p><a href=\"{}\">Video link</a></p>", html_url(&comments_url))
+							} else {
+								format!(
+									"<p><video controls preload=\"metadata\" poster=\"{}\"><source src=\"{}\"><img src=\"{}\" alt=\"{}\"></video></p>",
+									html_url(&poster),
+									html_url(&hls_src),
+									html_url(&poster),
+									encode_minimal(&post.title)
+								)
+							}
+						}
+						_ => String::new(),
+					};
+
+					let youtube_html = raw_out_url.and_then(|url| youtube_embed(url)).unwrap_or_default();
+
+					let body_html = inline_image_links(&absolutize_html(
+						&base_url,
+						&rewrite_urls(&decode_html(&post.body).unwrap_or_else(|_| post.body.to_string())),
+					));
+
+					let author_url = absolute_url(&base_url, &format!("/u/{}", post.author.name));
+					let metadata = format!(
+						"<p><strong>Points: {} | Comments: {} | submitted by <a href=\"{}\">/u/{}</a></strong></p>",
+						encode_minimal(&post.score.0),
+						encode_minimal(&post.comments.0),
+						html_url(&author_url),
+						encode_minimal(&post.author.name)
+					);
+					let links_html = if let Some(link_url) = external_url.as_ref() {
+						format!(
+							"<p><a href=\"{}\">[link]</a> <a href=\"{}\">[comments]</a></p>",
+							html_url(link_url),
+							html_url(&comments_url)
+						)
+					} else {
+						String::new()
+					};
+					let item_html = [metadata, links_html, "<hr>".to_string(), media_html, youtube_html, body_html]
+						.into_iter()
+						.filter(|html| !html.is_empty())
+						.collect::<Vec<_>>()
+						.join("");
+
+					Item {
+						title: Some(item_title),
+						link: Some(comments_url.clone()),
+						author: Some(format!("/u/{}", post.author.name)),
+						comments: Some(comments_url.clone()),
+						guid: Some(Guid {
+							value: comments_url.clone(),
+							permalink: true,
+						}),
+						content: Some(item_html.clone()),
+						pub_date: Some(DateTime::from_timestamp(post.created_ts as i64, 0).unwrap_or_default().to_rfc2822()),
+						description: Some(item_html),
+						..Default::default()
+					}
 				})
 				.collect::<Vec<_>>(),
 		)

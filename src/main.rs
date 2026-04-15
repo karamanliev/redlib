@@ -331,6 +331,7 @@ async fn main() {
 
 	// RSS Subscriptions
 	app.at("/r/:sub.rss").get(|r| subreddit::rss(r).boxed());
+	app.at("/r/:sub/:sort.rss").get(|r| subreddit::rss(r).boxed());
 
 	// Subreddit services
 	app

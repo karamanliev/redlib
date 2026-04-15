@@ -268,8 +268,6 @@ impl Media {
 			Self {
 				url: format_url(url_val.as_str().unwrap_or_default()),
 				alt_url,
-				// Note: in the data["is_reddit_media_domain"] path above
-				// width and height will be 0.
 				width: source["width"].as_i64().unwrap_or_default(),
 				height: source["height"].as_i64().unwrap_or_default(),
 				poster: format_url(source["url"].as_str().unwrap_or_default()),
