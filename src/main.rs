@@ -53,6 +53,17 @@ async fn favicon() -> Result<Response<Body>, String> {
 	)
 }
 
+async fn favicon_png() -> Result<Response<Body>, String> {
+	Ok(
+		Response::builder()
+			.status(200)
+			.header("content-type", "image/png")
+			.header("Cache-Control", "public, max-age=1209600, s-maxage=86400")
+			.body(include_bytes!("../static/favicon.png").as_ref().into())
+			.unwrap_or_default(),
+	)
+}
+
 async fn font() -> Result<Response<Body>, String> {
 	Ok(
 		Response::builder()
@@ -255,6 +266,7 @@ async fn main() {
 		.boxed()
 	});
 	app.at("/favicon.ico").get(|_| favicon().boxed());
+	app.at("/favicon.png").get(|_| favicon_png().boxed());
 	app.at("/logo.png").get(|_| pwa_logo().boxed());
 	app.at("/Inter.var.woff2").get(|_| font().boxed());
 	app.at("/touch-icon-iphone.png").get(|_| iphone_logo().boxed());
