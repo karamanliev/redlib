@@ -378,7 +378,7 @@ nav #links a {
 main {
     display: flex;
     justify-content: center;
-    max-width: 1000px;
+    max-width: 1050px;
     padding: 10px 20px;
     margin: 0 auto;
     padding-bottom: 4em;
@@ -561,6 +561,17 @@ aside {
 #user_actions {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+}
+
+#user_actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#user_actions button {
+    width: 100%;
 }
 
 #user_details > label,
@@ -2301,6 +2312,11 @@ th {
         max-width: 100%;
     }
     #user { margin: 0 0 20px; }
+
+    #user_actions {
+        flex-direction: row;
+        gap: 8px;
+    }
 
     body.fixed_navbar {
         min-height: calc(100vh - 75px);
