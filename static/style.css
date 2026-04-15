@@ -1037,7 +1037,6 @@ a.search_subreddit:hover {
     gap: var(--post-gap, 12px);
     padding: var(--post-padding, 10px 12px);
     align-items: flex-start;
-    cursor: pointer;
     background: var(--post);
     border: var(--panel-border);
     border-radius: 5px;
@@ -1049,14 +1048,6 @@ a.search_subreddit:hover {
 
 .post:not(.highlighted):hover {
     background: var(--highlighted);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.post:not(.highlighted):active {
-    transform: translateY(0);
-    box-shadow: var(--shadow);
-    transition-duration: 80ms;
 }
 
 .post:not(.highlighted) .post_content {
@@ -2244,7 +2235,7 @@ th {
         max-width: 100%;
     }
     #user { margin: 0 0 20px; }
-    
+
     body.fixed_navbar {
         min-height: calc(100vh - 75px);
         padding-top: 45px;
