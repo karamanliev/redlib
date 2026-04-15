@@ -17,6 +17,7 @@ env:
 
 jobs:
   build:
+    if: false
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -98,9 +99,9 @@ jobs:
           retention-days: 1
 
   merge:
+    if: false
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name != 'pull_request'
     permissions:
       contents: read
       packages: write
