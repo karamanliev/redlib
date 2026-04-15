@@ -1,10 +1,7 @@
 # Build stage
-FROM rust:1.86-bookworm AS builder
-
-ARG TARGET
+FROM rust:1.94-bookworm AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    musl-tools \
     libssl-dev \
     pkg-config \
     git \
@@ -14,7 +11,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     clang \
     libclang-dev \
     g++ \
-    linux-headers-generic \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -23,26 +19,25 @@ WORKDIR /app
 # Copy the entire source code
 COPY . .
 
-# Install the target
-RUN rustup target add ${TARGET}
-
-# Build the application
-RUN cargo build --release --target ${TARGET}
+# Build the application using the lockfile for reproducible CI builds
+RUN cargo build --release --locked
 
 # Copy the binary to a known location
-RUN cp target/${TARGET}/release/redlib /usr/local/bin/redlib
+RUN cp target/release/redlib /usr/local/bin/redlib
 
 # Runtime stage
-FROM alpine:3.19
+FROM debian:bookworm-slim
 
-# Install runtime dependencies
-RUN apk update && apk add --no-cache wget ca-certificates
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy the binary from the builder
 COPY --from=builder /usr/local/bin/redlib /usr/local/bin/redlib
 
 # Create non-root user
-RUN adduser --home /nonexistent --no-create-home --disabled-password redlib
+RUN useradd --no-create-home --system redlib
 
 USER redlib
 
@@ -50,6 +45,6 @@ USER redlib
 EXPOSE 8080
 
 # Healthcheck
-HEALTHCHECK --interval=1m --timeout=3s CMD wget --spider -q http://localhost:8080/settings || exit 1
+HEALTHCHECK --interval=1m --timeout=3s CMD curl --fail http://localhost:8080/settings || exit 1
 
 CMD ["redlib"]

@@ -63,5 +63,3 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: |
-            TARGET=x86_64-unknown-linux-musl
