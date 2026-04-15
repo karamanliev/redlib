@@ -1,10 +1,3 @@
-# OpenWolf
-
-@.wolf/OPENWOLF.md
-
-This project uses OpenWolf for context management. Read and follow .wolf/OPENWOLF.md every session. Check .wolf/cerebrum.md before generating code. Check .wolf/anatomy.md before reading files.
-
-
 ## Design Context
 
 ### Users
@@ -23,7 +16,6 @@ A diverse audience spanning privacy-conscious readers who want Reddit content wi
 Best-effort approach — no formal WCAG compliance target, but follow good practices: visible focus indicators, sufficient contrast for readability, semantic HTML, and alt text for meaningful images. All animations respect `prefers-reduced-motion: reduce`.
 
 ### Design Principles
-
 1. **Images and video first**: Optimize for media-heavy subreddits. Large previews, not tiny thumbnails. Make visual content the hero of the layout, especially on mobile.
 2. **More content, less pagination**: Default to showing more content per page. Reduce friction from "next page" clicks. The user should be able to scroll and consume, not constantly click through.
 3. **Smart information density**: Collapse noise (joke chains, repetitive comments) while keeping signal. Give users tools to quickly find the substance in threads.
