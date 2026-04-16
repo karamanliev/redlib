@@ -852,7 +852,7 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 
 					let author_url = absolute_url(&base_url, &format!("/u/{}", post.author.name));
 					let metadata = format!(
-						"<p><strong>Points: {} | Comments: {} | submitted by <a href=\"{}\">/u/{}</a></strong></p>",
+						"<p>Points: <strong>{}</strong> | Comments: <strong>{}</strong> | submitted by <strong><a href=\"{}\">/u/{}</a></strong></p>",
 						encode_minimal(&post.score.0),
 						encode_minimal(&post.comments.0),
 						html_url(&author_url),
