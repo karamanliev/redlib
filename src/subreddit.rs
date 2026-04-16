@@ -865,7 +865,7 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 							html_url(&comments_url)
 						)
 					} else {
-						String::new()
+						format!("<p><a href=\"{}\">[comments]</a></p>", html_url(&comments_url))
 					};
 					let item_html = [metadata, links_html, "<hr>".to_string(), media_html, youtube_html, body_html]
 						.into_iter()
