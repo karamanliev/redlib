@@ -867,7 +867,13 @@ pub async fn rss(req: Request<Body>) -> Result<Response<Body>, String> {
 					} else {
 						format!("<p><a href=\"{}\">[comments]</a></p>", html_url(&comments_url))
 					};
-					let item_html = [metadata, links_html, "<hr>".to_string(), media_html, youtube_html, body_html]
+					let content_after_hr = [media_html.clone(), youtube_html.clone(), body_html.clone()]
+						.into_iter()
+						.filter(|html| !html.is_empty())
+						.collect::<Vec<_>>()
+						.join("");
+					let hr = if content_after_hr.is_empty() { String::new() } else { "<hr>".to_string() };
+					let item_html = [metadata, links_html, hr, media_html, youtube_html, body_html]
 						.into_iter()
 						.filter(|html| !html.is_empty())
 						.collect::<Vec<_>>()
