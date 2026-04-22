@@ -1,10 +1,6 @@
-function syncCommentThreadToggle(controls, details) {
+function syncCommentThreadToggle(commentLeft, details) {
     const expanded = details.open ? "true" : "false";
-
-    controls.forEach(function(control) {
-        control.setAttribute("aria-expanded", expanded);
-        control.closest(".comment_left")?.classList.toggle("collapsed", !details.open);
-    });
+    commentLeft.setAttribute("aria-expanded", expanded);
 }
 
 function getCommentScrollOffset() {
@@ -45,31 +41,23 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        const controls = commentLeft.querySelectorAll(".comment_score, .line");
-        const score = commentLeft.querySelector(".comment_score");
-        if (!controls.length) {
-            return;
-        }
-
-        syncCommentThreadToggle(controls, details);
+        syncCommentThreadToggle(commentLeft, details);
         details.dataset.lastOpen = details.open ? "true" : "false";
 
         details.addEventListener("toggle", function() {
             const wasOpen = details.dataset.lastOpen === "true";
 
-            syncCommentThreadToggle(controls, details);
+            syncCommentThreadToggle(commentLeft, details);
 
-            if (wasOpen && !details.open && score && !isVisibleInViewport(score)) {
-                scrollCommentIntoView(score);
+            if (wasOpen && !details.open && !isVisibleInViewport(commentLeft)) {
+                scrollCommentIntoView(commentLeft);
             }
 
             details.dataset.lastOpen = details.open ? "true" : "false";
         });
 
-        controls.forEach(function(control) {
-            control.addEventListener("click", function() {
-                details.open = !details.open;
-            });
+        commentLeft.addEventListener("click", function() {
+            details.open = !details.open;
         });
     });
 });
