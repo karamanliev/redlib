@@ -288,7 +288,9 @@ async fn main() {
 		.at("/comment_threads.js")
 		.get(|_| resource(include_str!("../static/comment_threads.js"), "text/javascript", true).boxed());
 	app.at("/copy.js").get(|_| resource(include_str!("../static/copy.js"), "text/javascript", true).boxed());
-	app.at("/theme_toggle.js").get(|_| resource(include_str!("../static/theme_toggle.js"), "text/javascript", true).boxed());
+	app
+		.at("/theme_toggle.js")
+		.get(|_| resource(include_str!("../static/theme_toggle.js"), "text/javascript", true).boxed());
 
 	app.at("/commits.atom").get(|_| async move { proxy_commit_info().await }.boxed());
 	app.at("/instances.json").get(|_| async move { proxy_instances().await }.boxed());
