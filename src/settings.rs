@@ -24,7 +24,7 @@ struct SettingsTemplate {
 
 // CONSTANTS
 
-const PREFS: [&str; 21] = [
+const PREFS: [&str; 23] = [
 	"theme",
 	"front_page",
 	"layout",
@@ -46,6 +46,8 @@ const PREFS: [&str; 21] = [
 	"remove_default_feeds",
 	"post_count",
 	"collapse_depth",
+	"light_theme",
+	"dark_theme",
 ];
 
 // FUNCTIONS

@@ -626,7 +626,7 @@ pub struct Params {
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, PartialEq, Eq)]
-#[revisioned(revision = 2)]
+#[revisioned(revision = 3)]
 pub struct Preferences {
 	#[revision(start = 1)]
 	#[serde(skip_serializing, skip_deserializing)]
@@ -679,6 +679,13 @@ pub struct Preferences {
 	pub post_count: String,
 	#[revision(start = 2)]
 	pub collapse_depth: String,
+	#[revision(start = 3)]
+	pub light_theme: String,
+	#[revision(start = 3)]
+	pub dark_theme: String,
+	#[revision(start = 3)]
+	#[serde(skip_serializing, skip_deserializing)]
+	pub available_themes_no_system: Vec<String>,
 }
 
 fn serialize_vec_with_plus<S>(vec: &[String], serializer: S) -> Result<S::Ok, S::Error>
@@ -714,6 +721,9 @@ impl Preferences {
 			let chunks: Vec<&str> = file.as_ref().split(".css").collect();
 			themes.push(chunks[0].to_owned());
 		}
+		// Build available_themes_no_system by filtering out "system"
+		let available_themes_no_system: Vec<String> = themes.iter().filter(|t| *t != "system").cloned().collect();
+
 		Self {
 			available_themes: themes,
 			theme: setting(req, "theme"),
@@ -739,6 +749,9 @@ impl Preferences {
 			remove_default_feeds: setting(req, "remove_default_feeds"),
 			post_count: setting(req, "post_count"),
 			collapse_depth: setting(req, "collapse_depth"),
+			light_theme: setting(req, "light_theme"),
+			dark_theme: setting(req, "dark_theme"),
+			available_themes_no_system,
 		}
 	}
 
@@ -754,6 +767,25 @@ impl Preferences {
 	}
 	pub fn to_bincode_str(&self) -> Result<String, String> {
 		Ok(base2048::encode(&self.to_compressed_bincode()?))
+	}
+}
+
+/// Extract CSS variable declarations from an embedded theme file.
+/// Returns the content between `{` and `}` from the `.themeName { ... }` block.
+/// Returns empty string if the theme file is not found or parsing fails.
+pub fn get_theme_vars_css(theme_name: &str) -> String {
+	let filename = format!("{theme_name}.css");
+	match ThemeAssets::get(&filename) {
+		Some(file) => {
+			let content = std::str::from_utf8(file.data.as_ref()).unwrap_or("");
+			if let Some(block_start) = content.find('{') {
+				if let Some(block_end) = content.rfind('}') {
+					return content[block_start + 1..block_end].trim().to_string();
+				}
+			}
+			String::new()
+		}
+		None => String::new(),
 	}
 }
 

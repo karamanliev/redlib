@@ -23,6 +23,20 @@
 						{% call utils::options(prefs.theme, prefs.available_themes, "system") %}
 					</select>
 				</div>
+				<div id="auto-theme-settings">
+				<div class="prefs-group">
+					<label for="light_theme">Light theme (auto mode):</label>
+					<select name="light_theme" id="light_theme">
+						{% call utils::options(prefs.light_theme, prefs.available_themes_no_system, "light") %}
+					</select>
+				</div>
+				<div class="prefs-group">
+					<label for="dark_theme">Dark theme (auto mode):</label>
+					<select name="dark_theme" id="dark_theme">
+						{% call utils::options(prefs.dark_theme, prefs.available_themes_no_system, "dark") %}
+					</select>
+				</div>
+				</div>
 			</fieldset>
 			<fieldset>
 				<legend>Interface</legend>
@@ -161,6 +175,7 @@
 			<input id="save" type="submit" value="Save">
 		</div>
 	</form>
+	<script src="/theme_toggle.js" defer></script>
 	{% if prefs.subscriptions.len() > 0 %}
 	<div class="prefs" id="settings_subs">
 		<legend>Subscribed Feeds</legend>
